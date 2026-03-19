@@ -1,6 +1,6 @@
 {
   "name": "hrr-memory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Holographic Reduced Representations for structured agent memory. Zero dependencies. Complements RAG with algebraic fact queries.",
   "type": "module",
   "main": "src/index.js",
@@ -24,12 +24,24 @@
     "vector",
     "structured-memory",
     "fact-store",
-    "llm"
+    "llm",
+    "knowledge-graph",
+    "triple-store",
+    "circular-convolution",
+    "embeddings",
+    "chatbot",
+    "retrieval",
+    "cognitive-architecture",
+    "neural-memory",
+    "associative-memory",
+    "semantic-memory",
+    "ai-agent",
+    "no-dependencies"
   ],
   "author": "Jounes",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joncik/hrr-memory"
+    "url": "https://github.com/Joncik91/hrr-memory"
   }
 }
