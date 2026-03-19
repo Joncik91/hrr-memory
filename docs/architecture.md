@@ -75,6 +75,56 @@ With auto-sharding, total capacity is limited only by available RAM:
 | 100 | 2,500 | 100% |
 | 1,000 | 25,000 | 100% |
 
+## Design Decisions
+
+hrr-memory's implementation diverges from the academic literature in several deliberate ways. Understanding these trade-offs explains why the library works the way it does.
+
+### Research Background
+
+HRR was introduced by Tony Plate in his 1994 PhD thesis and subsequent IEEE paper (1995). The theoretical framework describes encoding structured knowledge into high-dimensional vectors using circular convolution (binding) and correlation (unbinding), with superposition (addition) allowing multiple facts to coexist in a single vector.
+
+The standard academic approach uses large vectors (d=10,000) with techniques like complex-unit-magnitude projection to control noise accumulation. The theoretical capacity formula is:
+
+```
+n_max ≈ 0.375 × d
+```
+
+At d=10,000, this gives ~3,750 associations per vector with <3% retrieval error. Modern implementations like torchhd (Heddes et al., 2023) and OpenMem (2026) follow this pattern, typically using Python with PyTorch and SQLite for the symbolic layer.
+
+### Why We Diverged
+
+We tested the single-large-vector approach and found that while mathematically elegant, it has practical problems for production agent memory:
+
+1. **Graceful degradation is worse than guaranteed accuracy.** At 3,750 associations in a d=10,000 vector, retrieval accuracy is ~97%. That sounds good until your agent confidently returns the wrong timezone for a user 3% of the time. For structured facts, you need 100% or nothing.
+
+2. **Sharding is simpler than projection.** Complex-unit-magnitude projection adds mathematical complexity to squeeze more capacity from each vector. Auto-sharding at 25 facts per bucket achieves 100% accuracy with basic operations — no projection step, no noise estimation, no capacity planning.
+
+3. **JavaScript + zero dependencies beats Python + PyTorch for agent deployment.** Most AI agents run in Node.js environments. Requiring a Python runtime, PyTorch, and torch-hd as dependencies makes HRR impractical for the exact use case where it's most valuable. Pure JS with FFT-based convolution runs anywhere Node runs.
+
+4. **Small vectors, many buckets scales better than big vectors, fewer buckets.** At d=2,048, each symbol costs 8KB. At d=10,000, each symbol costs 40KB. With auto-sharding, we get unlimited capacity at d=2,048 with 5x less memory per symbol.
+
+### The Trade-off Matrix
+
+| Approach | Accuracy | Dependencies | Memory/Symbol | Capacity | Complexity |
+|----------|----------|-------------|---------------|----------|------------|
+| Academic (d=10K, projection) | ~97% at capacity | Python, PyTorch | 40KB | ~3,750/vector | High |
+| **hrr-memory (d=2K, sharding)** | **100%** | **None** | **8KB** | **Unlimited** | **Low** |
+
+### What We Kept
+
+Not everything diverges from the literature:
+
+- **Circular convolution via FFT** — the core binding operation is identical to Plate's original formulation
+- **Random unit vectors for symbols** — standard HRR practice, ensures approximate orthogonality
+- **Cosine similarity for decoding** — nearest-neighbor lookup in symbol space
+- **Dual representation** — symbolic triples alongside algebraic vectors, matching the hybrid architecture recommended by OpenMem
+
+### References
+
+- Plate, T. (1994). *Distributed Representations and Nested Compositional Structure*. PhD thesis, University of Toronto.
+- Plate, T. (1995). Holographic Reduced Representations. *IEEE Transactions on Neural Networks*, 6(3).
+- Heddes, M. et al. (2023). Torchhd: An Open-Source Python Library for Hyperdimensional Computing. *JMLR*.
+
 ## Shared Symbol Table
 
 Every unique string (subject, relation, or object) gets a random vector. This vector is generated once and reused everywhere — across all buckets, for both encoding and decoding.
