@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="900" y2="420">
+      <stop offset="0%" stop-color="#f8f5ee"/>
+      <stop offset="100%" stop-color="#f0ebe0"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a6b6e"/>
+      <stop offset="100%" stop-color="#2d8a8e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9a7a3a"/>
+      <stop offset="100%" stop-color="#b89840"/>
+    </linearGradient>
+    <linearGradient id="rust" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b3a2a"/>
+      <stop offset="100%" stop-color="#a84a38"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="420" rx="12" fill="url(#bg)"/>
+  <rect width="900" height="420" rx="12" fill="none" stroke="#d8cdb8" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="450" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1410">How HRR Memory Works</text>
+  <text x="450" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#9a8e7a">Algebraic fact storage via circular convolution</text>
+
+  <!-- STORE SECTION -->
+  <text x="30" y="100" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">STORE</text>
+
+  <!-- Triple boxes -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
+    <text x="90" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">subject</text>
+    <text x="90" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1a6b6e">alice</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="170" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
+    <text x="230" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">relation</text>
+    <text x="230" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#9a7a3a">lives_in</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="310" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
+    <text x="370" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">object</text>
+    <text x="370" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#8b3a2a">paris</text>
+  </g>
+
+  <!-- Bind arrows -->
+  <text x="155" y="145" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
+  <text x="295" y="145" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
+
+  <!-- Arrow to bucket -->
+  <line x1="430" y1="140" x2="470" y2="140" stroke="#1a6b6e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1a6b6e"/></marker></defs>
+
+  <!-- Bucket visualization -->
+  <g filter="url(#shadow)">
+    <rect x="480" y="110" width="180" height="60" rx="8" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
+    <text x="570" y="132" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">bucket: alice</text>
+    <!-- Wave pattern representing superposed vector -->
+    <path d="M495,150 Q505,140 515,150 Q525,160 535,150 Q545,140 555,150 Q565,160 575,150 Q585,140 595,150 Q605,160 615,150 Q625,140 635,150 Q645,160 650,150" stroke="#1a6b6e" stroke-width="1.5" fill="none" opacity="0.6"/>
+  </g>
+
+  <!-- More facts arrow -->
+  <text x="570" y="190" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-style="italic" fill="#9a8e7a">+ more facts superposed in same vector</text>
+
+  <!-- QUERY SECTION -->
+  <text x="30" y="240" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">QUERY</text>
+
+  <!-- Query boxes -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="255" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
+    <text x="90" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">subject</text>
+    <text x="90" y="293" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1a6b6e">alice</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="170" y="255" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
+    <text x="230" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">relation</text>
+    <text x="230" y="293" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#9a7a3a">lives_in</text>
+  </g>
+
+  <!-- Unbind arrow -->
+  <text x="155" y="285" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
+
+  <line x1="290" y1="280" x2="330" y2="280" stroke="#1a6b6e" stroke-width="2"/>
+  <text x="345" y="285" text-anchor="middle" font-family="monospace" font-size="14" fill="#1a6b6e">⊖</text>
+  <line x1="360" y1="280" x2="400" y2="280" stroke="#1a6b6e" stroke-width="2"/>
+
+  <!-- Bucket (query) -->
+  <g filter="url(#shadow)">
+    <rect x="410" y="255" width="120" height="50" rx="8" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
+    <text x="470" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">bucket</text>
+    <path d="M425,290 Q435,280 445,290 Q455,300 465,290 Q475,280 485,290 Q495,300 505,290 Q515,280 520,290" stroke="#1a6b6e" stroke-width="1.5" fill="none" opacity="0.6"/>
+  </g>
+
+  <!-- Result arrow -->
+  <line x1="530" y1="280" x2="580" y2="280" stroke="#8b3a2a" stroke-width="2" marker-end="url(#arrowred)"/>
+  <defs><marker id="arrowred" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8b3a2a"/></marker></defs>
+
+  <!-- Result -->
+  <g filter="url(#shadow)">
+    <rect x="590" y="255" width="130" height="50" rx="8" fill="#8b3a2a" fill-opacity="0.08" stroke="#8b3a2a" stroke-width="1.5"/>
+    <text x="655" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a">result</text>
+    <text x="655" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#8b3a2a">paris ✓</text>
+  </g>
+
+  <!-- AUTO-SHARD SECTION -->
+  <text x="30" y="345" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">AUTO-SHARD</text>
+
+  <!-- Shard buckets -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="358" width="130" height="45" rx="6" fill="white" stroke="#1a6b6e"/>
+    <text x="95" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice</text>
+    <text x="95" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">25/25 facts</text>
+    <circle cx="148" cy="370" r="4" fill="#1a6b6e"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="175" y="358" width="130" height="45" rx="6" fill="white" stroke="#1a6b6e"/>
+    <text x="240" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice#1</text>
+    <text x="240" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">12/25 facts</text>
+    <circle cx="293" cy="370" r="4" fill="#2d8a8e" fill-opacity="0.5"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="320" y="358" width="130" height="45" rx="6" fill="white" stroke="#9a7a3a"/>
+    <text x="385" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a7a3a" font-weight="700">bob</text>
+    <text x="385" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">8/25 facts</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="465" y="358" width="130" height="45" rx="6" fill="white" stroke="#8b3a2a"/>
+    <text x="530" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a" font-weight="700">server</text>
+    <text x="530" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">3/25 facts</text>
+  </g>
+
+  <text x="610" y="385" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#9a8e7a">...</text>
+
+  <!-- VS RAG box -->
+  <g filter="url(#shadow)">
+    <rect x="690" y="100" width="180" height="300" rx="10" fill="white" stroke="#d8cdb8"/>
+    <text x="780" y="130" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="1">HRR vs RAG</text>
+
+    <text x="710" y="160" font-family="Georgia, serif" font-size="12" font-weight="700" fill="#1a6b6e">HRR</text>
+    <text x="710" y="178" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">What is X's Y?</text>
+    <text x="710" y="196" font-family="monospace" font-size="10" fill="#1a6b6e">&lt;1ms · exact</text>
+    <text x="710" y="214" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Structured triples</text>
+    <text x="710" y="232" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Zero dependencies</text>
+
+    <line x1="710" y1="250" x2="850" y2="250" stroke="#d8cdb8"/>
+
+    <text x="710" y="275" font-family="Georgia, serif" font-size="12" font-weight="700" fill="#9a7a3a">RAG</text>
+    <text x="710" y="293" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Find docs about X</text>
+    <text x="710" y="311" font-family="monospace" font-size="10" fill="#9a7a3a">~50ms · ranked</text>
+    <text x="710" y="329" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Semantic similarity</text>
+    <text x="710" y="347" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Needs vector DB</text>
+
+    <line x1="710" y1="365" x2="850" y2="365" stroke="#d8cdb8"/>
+    <text x="780" y="390" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="#1a1410">Complementary ✦</text>
+  </g>
+</svg>
