@@ -1,168 +1,271 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" fill="none">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="900" y2="420">
+    <linearGradient id="bg" x1="0" y1="0" x2="920" y2="560">
       <stop offset="0%" stop-color="#f8f5ee"/>
       <stop offset="100%" stop-color="#f0ebe0"/>
     </linearGradient>
-    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a6b6e"/>
-      <stop offset="100%" stop-color="#2d8a8e"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#9a7a3a"/>
-      <stop offset="100%" stop-color="#b89840"/>
-    </linearGradient>
-    <linearGradient id="rust" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#8b3a2a"/>
-      <stop offset="100%" stop-color="#a84a38"/>
-    </linearGradient>
-    <filter id="shadow">
+    <filter id="sh">
       <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
     </filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1a6b6e"/></marker>
+    <marker id="arr-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8b3a2a"/></marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#5a7a3a"/></marker>
   </defs>
 
   <!-- Background -->
-  <rect width="900" height="420" rx="12" fill="url(#bg)"/>
-  <rect width="900" height="420" rx="12" fill="none" stroke="#d8cdb8" stroke-width="1"/>
+  <rect width="920" height="560" rx="12" fill="url(#bg)"/>
+  <rect width="920" height="560" rx="12" fill="none" stroke="#d8cdb8"/>
 
   <!-- Title -->
-  <text x="450" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1410">How HRR Memory Works</text>
-  <text x="450" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#9a8e7a">Algebraic fact storage via circular convolution</text>
+  <text x="460" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1410">hrr-memory — Architecture</text>
+  <text x="460" y="54" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#9a8e7a">store &middot; query &middot; ask &middot; forget &middot; auto-shard</text>
 
-  <!-- STORE SECTION -->
-  <text x="30" y="100" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">STORE</text>
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ASK() — Natural Language Pipeline           -->
+  <!-- ════════════════════════════════════════════ -->
+  <text x="30" y="90" font-family="monospace" font-size="10" font-weight="700" fill="#9a8e7a" letter-spacing="2">ASK</text>
 
-  <!-- Triple boxes -->
-  <g filter="url(#shadow)">
-    <rect x="30" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
-    <text x="90" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">subject</text>
-    <text x="90" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1a6b6e">alice</text>
+  <!-- Input question -->
+  <g filter="url(#sh)">
+    <rect x="30" y="100" width="260" height="40" rx="6" fill="white" stroke="#d8cdb8"/>
+    <text x="160" y="125" text-anchor="middle" font-family="monospace" font-size="12" fill="#5a4e3a">"What is alice's timezone?"</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="170" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
-    <text x="230" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">relation</text>
-    <text x="230" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#9a7a3a">lives_in</text>
+  <line x1="290" y1="120" x2="318" y2="120" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Strip stop words -->
+  <g filter="url(#sh)">
+    <rect x="325" y="100" width="155" height="40" rx="6" fill="#1a6b6e" fill-opacity="0.06" stroke="#1a6b6e" stroke-dasharray="4,3"/>
+    <text x="402" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a6b6e" font-weight="700">strip stops + possessives</text>
+    <text x="402" y="131" text-anchor="middle" font-family="monospace" font-size="11" fill="#1a6b6e">[ alice, timezone ]</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="310" y="115" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
-    <text x="370" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">object</text>
-    <text x="370" y="153" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#8b3a2a">paris</text>
+  <line x1="480" y1="120" x2="508" y2="120" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Try pairs -->
+  <g filter="url(#sh)">
+    <rect x="515" y="100" width="160" height="40" rx="6" fill="#1a6b6e" fill-opacity="0.06" stroke="#1a6b6e" stroke-dasharray="4,3"/>
+    <text x="595" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a6b6e" font-weight="700">try word pairs</text>
+    <text x="595" y="131" text-anchor="middle" font-family="monospace" font-size="11" fill="#1a6b6e">query(alice, timezone)</text>
   </g>
 
-  <!-- Bind arrows -->
-  <text x="155" y="145" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
-  <text x="295" y="145" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
+  <line x1="675" y1="120" x2="708" y2="120" stroke="#8b3a2a" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+  <!-- Result -->
+  <g filter="url(#sh)">
+    <rect x="715" y="100" width="175" height="40" rx="6" fill="#8b3a2a" fill-opacity="0.07" stroke="#8b3a2a"/>
+    <text x="802" y="118" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a">{ type: "direct" }</text>
+    <text x="802" y="133" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#8b3a2a">match: "cet"</text>
+  </g>
+
+  <!-- Cascade note -->
+  <text x="595" y="155" text-anchor="middle" font-family="Georgia, serif" font-size="10" font-style="italic" fill="#9a8e7a">cascade: word pairs → subject lookup → cross-bucket search → miss</text>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- STORE — Encoding Pipeline                    -->
+  <!-- ════════════════════════════════════════════ -->
+  <text x="30" y="195" font-family="monospace" font-size="10" font-weight="700" fill="#9a8e7a" letter-spacing="2">STORE</text>
+
+  <!-- Triple -->
+  <g filter="url(#sh)">
+    <rect x="30" y="208" width="100" height="44" rx="6" fill="white" stroke="#1a6b6e"/>
+    <text x="80" y="225" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">subject</text>
+    <text x="80" y="242" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1a6b6e">alice</text>
+  </g>
+
+  <text x="140" y="235" text-anchor="middle" font-family="monospace" font-size="16" fill="#1a6b6e" font-weight="700">&#8859;</text>
+
+  <g filter="url(#sh)">
+    <rect x="155" y="208" width="100" height="44" rx="6" fill="white" stroke="#9a7a3a"/>
+    <text x="205" y="225" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">relation</text>
+    <text x="205" y="242" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#9a7a3a">lives_in</text>
+  </g>
+
+  <text x="265" y="235" text-anchor="middle" font-family="monospace" font-size="16" fill="#1a6b6e" font-weight="700">&#8859;</text>
+
+  <g filter="url(#sh)">
+    <rect x="280" y="208" width="100" height="44" rx="6" fill="white" stroke="#8b3a2a"/>
+    <text x="330" y="225" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">object</text>
+    <text x="330" y="242" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#8b3a2a">paris</text>
+  </g>
+
+  <!-- Arrow to FFT -->
+  <line x1="380" y1="230" x2="415" y2="230" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- FFT bind box -->
+  <g filter="url(#sh)">
+    <rect x="422" y="208" width="110" height="44" rx="6" fill="#1a6b6e" fill-opacity="0.08" stroke="#1a6b6e"/>
+    <text x="477" y="226" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">bind(bind(s,r),o)</text>
+    <text x="477" y="243" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">FFT → multiply → IFFT</text>
+  </g>
 
   <!-- Arrow to bucket -->
-  <line x1="430" y1="140" x2="470" y2="140" stroke="#1a6b6e" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1a6b6e"/></marker></defs>
+  <line x1="532" y1="230" x2="567" y2="230" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- Bucket visualization -->
-  <g filter="url(#shadow)">
-    <rect x="480" y="110" width="180" height="60" rx="8" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
-    <text x="570" y="132" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">bucket: alice</text>
-    <!-- Wave pattern representing superposed vector -->
-    <path d="M495,150 Q505,140 515,150 Q525,160 535,150 Q545,140 555,150 Q565,160 575,150 Q585,140 595,150 Q605,160 615,150 Q625,140 635,150 Q645,160 650,150" stroke="#1a6b6e" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- Bucket -->
+  <g filter="url(#sh)">
+    <rect x="574" y="205" width="195" height="50" rx="6" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
+    <text x="671" y="222" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">bucket: alice [3/25]</text>
+    <path d="M590,240 Q600,230 610,240 Q620,250 630,240 Q640,230 650,240 Q660,250 670,240 Q680,230 690,240 Q700,250 710,240 Q720,230 730,240 Q740,250 755,240" stroke="#1a6b6e" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <text x="671" y="250" text-anchor="middle" font-family="monospace" font-size="8" fill="#9a8e7a">memory += association</text>
   </g>
 
-  <!-- More facts arrow -->
-  <text x="570" y="190" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-style="italic" fill="#9a8e7a">+ more facts superposed in same vector</text>
+  <!-- Dual storage note -->
+  <g filter="url(#sh)">
+    <rect x="785" y="205" width="105" height="50" rx="6" fill="white" stroke="#d8cdb8"/>
+    <text x="837" y="223" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a" font-weight="700">symbolic backup</text>
+    <text x="837" y="238" text-anchor="middle" font-family="monospace" font-size="9" fill="#5a4e3a">(alice, lives_in,</text>
+    <text x="837" y="250" text-anchor="middle" font-family="monospace" font-size="9" fill="#5a4e3a"> paris)</text>
+  </g>
+  <line x1="769" y1="230" x2="783" y2="230" stroke="#d8cdb8" stroke-width="1" stroke-dasharray="3,2"/>
 
-  <!-- QUERY SECTION -->
-  <text x="30" y="240" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">QUERY</text>
+  <!-- ════════════════════════════════════════════ -->
+  <!-- QUERY — Retrieval Pipeline                   -->
+  <!-- ════════════════════════════════════════════ -->
+  <text x="30" y="290" font-family="monospace" font-size="10" font-weight="700" fill="#9a8e7a" letter-spacing="2">QUERY</text>
 
-  <!-- Query boxes -->
-  <g filter="url(#shadow)">
-    <rect x="30" y="255" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
-    <text x="90" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">subject</text>
-    <text x="90" y="293" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1a6b6e">alice</text>
+  <!-- Query inputs -->
+  <g filter="url(#sh)">
+    <rect x="30" y="303" width="100" height="44" rx="6" fill="white" stroke="#1a6b6e"/>
+    <text x="80" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">subject</text>
+    <text x="80" y="337" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1a6b6e">alice</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="170" y="255" width="120" height="50" rx="8" fill="white" stroke="#d8cdb8"/>
-    <text x="230" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">relation</text>
-    <text x="230" y="293" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#9a7a3a">lives_in</text>
+  <text x="140" y="330" text-anchor="middle" font-family="monospace" font-size="16" fill="#1a6b6e" font-weight="700">&#8859;</text>
+
+  <g filter="url(#sh)">
+    <rect x="155" y="303" width="100" height="44" rx="6" fill="white" stroke="#9a7a3a"/>
+    <text x="205" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">relation</text>
+    <text x="205" y="337" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#9a7a3a">lives_in</text>
+  </g>
+
+  <!-- Arrow to probe -->
+  <line x1="255" y1="325" x2="290" y2="325" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Probe -->
+  <g filter="url(#sh)">
+    <rect x="297" y="303" width="90" height="44" rx="6" fill="#1a6b6e" fill-opacity="0.08" stroke="#1a6b6e"/>
+    <text x="342" y="321" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">probe</text>
+    <text x="342" y="338" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">bind(s, r)</text>
   </g>
 
   <!-- Unbind arrow -->
-  <text x="155" y="285" text-anchor="middle" font-family="monospace" font-size="18" fill="#1a6b6e">⊛</text>
+  <line x1="387" y1="325" x2="422" y2="325" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <line x1="290" y1="280" x2="330" y2="280" stroke="#1a6b6e" stroke-width="2"/>
-  <text x="345" y="285" text-anchor="middle" font-family="monospace" font-size="14" fill="#1a6b6e">⊖</text>
-  <line x1="360" y1="280" x2="400" y2="280" stroke="#1a6b6e" stroke-width="2"/>
+  <!-- Unbind box -->
+  <g filter="url(#sh)">
+    <rect x="429" y="303" width="105" height="44" rx="6" fill="#1a6b6e" fill-opacity="0.08" stroke="#1a6b6e"/>
+    <text x="481" y="321" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">unbind</text>
+    <text x="481" y="338" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">probe &#8854; memory</text>
+  </g>
 
-  <!-- Bucket (query) -->
-  <g filter="url(#shadow)">
-    <rect x="410" y="255" width="120" height="50" rx="8" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
-    <text x="470" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a8e7a">bucket</text>
-    <path d="M425,290 Q435,280 445,290 Q455,300 465,290 Q475,280 485,290 Q495,300 505,290 Q515,280 520,290" stroke="#1a6b6e" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- Nearest arrow -->
+  <line x1="534" y1="325" x2="569" y2="325" stroke="#1a6b6e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Nearest neighbor -->
+  <g filter="url(#sh)">
+    <rect x="576" y="303" width="130" height="44" rx="6" fill="#1a6b6e" fill-opacity="0.08" stroke="#1a6b6e"/>
+    <text x="641" y="321" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">nearest symbol</text>
+    <text x="641" y="338" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">cosine similarity</text>
   </g>
 
   <!-- Result arrow -->
-  <line x1="530" y1="280" x2="580" y2="280" stroke="#8b3a2a" stroke-width="2" marker-end="url(#arrowred)"/>
-  <defs><marker id="arrowred" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8b3a2a"/></marker></defs>
+  <line x1="706" y1="325" x2="741" y2="325" stroke="#8b3a2a" stroke-width="1.5" marker-end="url(#arr-r)"/>
 
   <!-- Result -->
-  <g filter="url(#shadow)">
-    <rect x="590" y="255" width="130" height="50" rx="8" fill="#8b3a2a" fill-opacity="0.08" stroke="#8b3a2a" stroke-width="1.5"/>
-    <text x="655" y="275" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a">result</text>
-    <text x="655" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#8b3a2a">paris ✓</text>
+  <g filter="url(#sh)">
+    <rect x="748" y="303" width="142" height="44" rx="6" fill="#8b3a2a" fill-opacity="0.07" stroke="#8b3a2a"/>
+    <text x="819" y="321" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a">score: 0.30</text>
+    <text x="819" y="339" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="700" fill="#8b3a2a">paris</text>
   </g>
 
-  <!-- AUTO-SHARD SECTION -->
-  <text x="30" y="345" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="2">AUTO-SHARD</text>
+  <!-- ════════════════════════════════════════════ -->
+  <!-- FORGET — Rebuild Pipeline                    -->
+  <!-- ════════════════════════════════════════════ -->
+  <text x="30" y="383" font-family="monospace" font-size="10" font-weight="700" fill="#9a8e7a" letter-spacing="2">FORGET</text>
 
-  <!-- Shard buckets -->
-  <g filter="url(#shadow)">
-    <rect x="30" y="358" width="130" height="45" rx="6" fill="white" stroke="#1a6b6e"/>
-    <text x="95" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice</text>
-    <text x="95" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">25/25 facts</text>
-    <circle cx="148" cy="370" r="4" fill="#1a6b6e"/>
+  <!-- Forget input -->
+  <g filter="url(#sh)">
+    <rect x="30" y="396" width="200" height="36" rx="6" fill="white" stroke="#8b3a2a"/>
+    <text x="130" y="419" text-anchor="middle" font-family="monospace" font-size="11" fill="#8b3a2a">forget(alice, lives_in, paris)</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="175" y="358" width="130" height="45" rx="6" fill="white" stroke="#1a6b6e"/>
-    <text x="240" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice#1</text>
-    <text x="240" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">12/25 facts</text>
-    <circle cx="293" cy="370" r="4" fill="#2d8a8e" fill-opacity="0.5"/>
+  <line x1="230" y1="414" x2="268" y2="414" stroke="#8b3a2a" stroke-width="1.5" marker-end="url(#arr-r)"/>
+
+  <!-- Remove triple -->
+  <g filter="url(#sh)">
+    <rect x="275" y="396" width="130" height="36" rx="6" fill="#8b3a2a" fill-opacity="0.06" stroke="#8b3a2a" stroke-dasharray="4,3"/>
+    <text x="340" y="411" text-anchor="middle" font-family="monospace" font-size="9" fill="#8b3a2a" font-weight="700">remove from triples</text>
+    <text x="340" y="425" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">splice(idx, 1)</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="320" y="358" width="130" height="45" rx="6" fill="white" stroke="#9a7a3a"/>
-    <text x="385" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a7a3a" font-weight="700">bob</text>
-    <text x="385" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">8/25 facts</text>
+  <line x1="405" y1="414" x2="438" y2="414" stroke="#5a7a3a" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+  <!-- Rebuild -->
+  <g filter="url(#sh)">
+    <rect x="445" y="396" width="175" height="36" rx="6" fill="#5a7a3a" fill-opacity="0.07" stroke="#5a7a3a"/>
+    <text x="532" y="411" text-anchor="middle" font-family="monospace" font-size="9" fill="#5a7a3a" font-weight="700">rebuild bucket vector</text>
+    <text x="532" y="425" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">re-encode remaining triples</text>
   </g>
 
-  <g filter="url(#shadow)">
-    <rect x="465" y="358" width="130" height="45" rx="6" fill="white" stroke="#8b3a2a"/>
-    <text x="530" y="375" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a" font-weight="700">server</text>
-    <text x="530" y="393" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">3/25 facts</text>
+  <line x1="620" y1="414" x2="653" y2="414" stroke="#5a7a3a" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+  <!-- Clean result -->
+  <g filter="url(#sh)">
+    <rect x="660" y="396" width="160" height="36" rx="6" fill="#5a7a3a" fill-opacity="0.07" stroke="#5a7a3a"/>
+    <text x="740" y="419" text-anchor="middle" font-family="monospace" font-size="10" fill="#5a7a3a" font-weight="700">clean bucket [2/25]</text>
   </g>
 
-  <text x="610" y="385" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#9a8e7a">...</text>
+  <!-- ════════════════════════════════════════════ -->
+  <!-- AUTO-SHARD — Bucket Chain                    -->
+  <!-- ════════════════════════════════════════════ -->
+  <text x="30" y="468" font-family="monospace" font-size="10" font-weight="700" fill="#9a8e7a" letter-spacing="2">AUTO-SHARD</text>
 
-  <!-- VS RAG box -->
-  <g filter="url(#shadow)">
-    <rect x="690" y="100" width="180" height="300" rx="10" fill="white" stroke="#d8cdb8"/>
-    <text x="780" y="130" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#9a8e7a" letter-spacing="1">HRR vs RAG</text>
-
-    <text x="710" y="160" font-family="Georgia, serif" font-size="12" font-weight="700" fill="#1a6b6e">HRR</text>
-    <text x="710" y="178" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">What is X's Y?</text>
-    <text x="710" y="196" font-family="monospace" font-size="10" fill="#1a6b6e">&lt;1ms · exact</text>
-    <text x="710" y="214" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Structured triples</text>
-    <text x="710" y="232" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Zero dependencies</text>
-
-    <line x1="710" y1="250" x2="850" y2="250" stroke="#d8cdb8"/>
-
-    <text x="710" y="275" font-family="Georgia, serif" font-size="12" font-weight="700" fill="#9a7a3a">RAG</text>
-    <text x="710" y="293" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Find docs about X</text>
-    <text x="710" y="311" font-family="monospace" font-size="10" fill="#9a7a3a">~50ms · ranked</text>
-    <text x="710" y="329" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Semantic similarity</text>
-    <text x="710" y="347" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Needs vector DB</text>
-
-    <line x1="710" y1="365" x2="850" y2="365" stroke="#d8cdb8"/>
-    <text x="780" y="390" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="#1a1410">Complementary ✦</text>
+  <!-- Bucket chain -->
+  <g filter="url(#sh)">
+    <rect x="30" y="480" width="120" height="55" rx="6" fill="white" stroke="#1a6b6e" stroke-width="1.5"/>
+    <text x="90" y="498" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice</text>
+    <rect x="42" y="506" width="96" height="6" rx="3" fill="#e8e0cc"/>
+    <rect x="42" y="506" width="96" height="6" rx="3" fill="#1a6b6e" opacity="0.7"/>
+    <text x="90" y="526" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">25/25 FULL</text>
   </g>
+
+  <text x="160" y="510" font-family="monospace" font-size="14" fill="#1a6b6e">&#8594;</text>
+
+  <g filter="url(#sh)">
+    <rect x="178" y="480" width="120" height="55" rx="6" fill="white" stroke="#1a6b6e"/>
+    <text x="238" y="498" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a6b6e" font-weight="700">alice#1</text>
+    <rect x="190" y="506" width="96" height="6" rx="3" fill="#e8e0cc"/>
+    <rect x="190" y="506" width="46" height="6" rx="3" fill="#1a6b6e" opacity="0.5"/>
+    <text x="238" y="526" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">12/25</text>
+  </g>
+
+  <g filter="url(#sh)">
+    <rect x="340" y="480" width="120" height="55" rx="6" fill="white" stroke="#9a7a3a"/>
+    <text x="400" y="498" text-anchor="middle" font-family="monospace" font-size="10" fill="#9a7a3a" font-weight="700">bob</text>
+    <rect x="352" y="506" width="96" height="6" rx="3" fill="#e8e0cc"/>
+    <rect x="352" y="506" width="31" height="6" rx="3" fill="#9a7a3a" opacity="0.5"/>
+    <text x="400" y="526" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">8/25</text>
+  </g>
+
+  <g filter="url(#sh)">
+    <rect x="502" y="480" width="120" height="55" rx="6" fill="white" stroke="#8b3a2a"/>
+    <text x="562" y="498" text-anchor="middle" font-family="monospace" font-size="10" fill="#8b3a2a" font-weight="700">server</text>
+    <rect x="514" y="506" width="96" height="6" rx="3" fill="#e8e0cc"/>
+    <rect x="514" y="506" width="12" height="6" rx="3" fill="#8b3a2a" opacity="0.5"/>
+    <text x="562" y="526" text-anchor="middle" font-family="monospace" font-size="9" fill="#9a8e7a">3/25</text>
+  </g>
+
+  <text x="635" y="512" font-family="Georgia, serif" font-size="14" fill="#9a8e7a">...</text>
+
+  <!-- Shard note -->
+  <g filter="url(#sh)">
+    <rect x="665" y="480" width="225" height="55" rx="6" fill="white" stroke="#d8cdb8"/>
+    <text x="777" y="499" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a6b6e" font-weight="700">MAX_BUCKET_SIZE = 25</text>
+    <text x="777" y="514" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">100% accuracy per bucket</text>
+    <text x="777" y="528" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5a4e3a">Unlimited total via auto-sharding</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="460" y="552" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#9a8e7a">hrr-memory v0.2 &middot; zero dependencies &middot; Float32 &middot; FFT-based circular convolution &middot; Plate (1994)</text>
 </svg>
