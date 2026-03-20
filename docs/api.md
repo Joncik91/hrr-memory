@@ -37,6 +37,27 @@ All values are lowercased and trimmed. The triple is encoded via circular convol
 
 ---
 
+### forget(subject, relation, object)
+
+Remove a fact from memory.
+
+```js
+mem.forget('alice', 'lives_in', 'paris') // → true
+mem.forget('alice', 'lives_in', 'paris') // → false (already gone)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `subject` | `string` | The entity |
+| `relation` | `string` | The attribute |
+| `object` | `string` | The value |
+
+**Returns:** `boolean` — `true` if found and removed, `false` if not found.
+
+The affected bucket's memory vector is rebuilt from the remaining triples. This is an O(n) operation where n is the number of facts in the bucket (max 25). Empty overflow buckets are cleaned up automatically.
+
+---
+
 ### query(subject, relation)
 
 Algebraic retrieval: given subject and relation, find the object.
