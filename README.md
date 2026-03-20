@@ -4,9 +4,7 @@
 
 hrr-memory stores structured facts as `(subject, relation, object)` triples and retrieves them in under 2 milliseconds — no vector database, no embeddings API, no dependencies. It complements RAG, not replaces it.
 
-<p align="center">
-  <img src="assets/hrr-diagram.svg" alt="How HRR Memory Works" width="800" />
-</p>
+![How HRR Memory Works](https://raw.githubusercontent.com/Joncik91/hrr-memory/main/assets/hrr-diagram.svg)
 
 ## Install
 
