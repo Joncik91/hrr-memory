@@ -6,12 +6,30 @@
  * is created automatically. Queries scan all buckets for a subject.
  *
  * Symbol vectors are shared across all buckets.
+ * All values are lowercased on store. If you need case-sensitive values,
+ * normalize them yourself before calling store().
+ *
+ * @typedef {{ match: string|null, score: number, confident: boolean, bucket: string|null }} QueryResult
+ * @typedef {{ relation: string, object: string }} Fact
+ * @typedef {{ subject: string, relation: string, object: string }} Triple
+ * @typedef {{ type: 'direct', match: string, score: number, confident: boolean, subject: string, relation: string, bucket: string|null }} DirectAskResult
+ * @typedef {{ type: 'subject', subject: string, facts: Fact[] }} SubjectAskResult
+ * @typedef {{ type: 'search', term: string, results: Triple[] }} SearchAskResult
+ * @typedef {{ type: 'miss', query: string }} MissAskResult
+ * @typedef {DirectAskResult | SubjectAskResult | SearchAskResult | MissAskResult} AskResult
+ * @typedef {{ dimensions: number, maxBucketSize: number, symbols: number, buckets: number, subjects: number, totalFacts: number, ramBytes: number, ramMB: number, perBucket: Array<{name: string, facts: number, full: boolean}> }} Stats
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { bind, unbind, similarity } from './ops.js';
 import { SymbolTable } from './symbols.js';
 import { Bucket, MAX_BUCKET_SIZE } from './bucket.js';
+
+const STOP_WORDS = new Set([
+  'what', 'is', 'the', 'a', 'an', 'does', 'do', 'where', 'who', 'how',
+  'which', 'of', 'for', 'in', 'at', 'to', 'my', 'your', 'their', 'has',
+  'have', 'was', 'were', 'are', 'been',
+]);
 
 export class HRRMemory {
   /**
@@ -92,6 +110,44 @@ export class HRRMemory {
     return true;
   }
 
+  // ── Forget ─────────────────────────────────────────
+
+  /**
+   * Remove a fact from memory.
+   * Rebuilds the affected bucket's memory vector from remaining triples.
+   * @param {string} subject
+   * @param {string} relation
+   * @param {string} object
+   * @returns {boolean} true if found and removed, false if not found
+   */
+  forget(subject, relation, object) {
+    const s = subject.toLowerCase().trim();
+    const r = relation.toLowerCase().trim();
+    const o = object.toLowerCase().trim();
+
+    const ids = this.routing.get(s);
+    if (!ids) return false;
+
+    for (let i = 0; i < ids.length; i++) {
+      const bucket = this.buckets.get(ids[i]);
+      const idx = bucket.triples.findIndex(t =>
+        t.subject === s && t.relation === r && t.object === o
+      );
+      if (idx === -1) continue;
+
+      bucket.triples.splice(idx, 1);
+      bucket.rebuild(this.symbols);
+
+      // Clean up empty overflow buckets
+      if (bucket.count === 0 && ids[i].includes('#')) {
+        this.buckets.delete(ids[i]);
+        ids.splice(i, 1);
+      }
+      return true;
+    }
+    return false;
+  }
+
   // ── Query ──────────────────────────────────────────
 
   /**
@@ -167,11 +223,22 @@ export class HRRMemory {
   }
 
   /**
-   * Free-form query: tries subject+relation, then subject lookup, then cross-bucket search.
-   * @param {string} question
+   * Free-form query: strips stop words and possessives, then tries subject+relation pairs,
+   * subject lookup, and cross-bucket search in that order.
+   * @param {string} question - Natural language question (e.g., "What is alice's timezone?")
+   * @returns {AskResult} One of: DirectAskResult, SubjectAskResult, SearchAskResult, or MissAskResult
+   * @example
+   * mem.store('alice', 'timezone', 'cet');
+   * mem.ask("What is alice's timezone?"); // → { type: 'direct', match: 'cet', ... }
+   * mem.ask('alice');                      // → { type: 'subject', facts: [...] }
    */
   ask(question) {
-    const parts = question.toLowerCase().trim().replace(/[?.,!]/g, '').split(/\s+/);
+    const parts = question.toLowerCase().trim()
+      .replace(/[?.,!]/g, '')
+      .replace(/'s\b/g, '')     // possessive: alice's → alice
+      .replace(/-/g, '_')       // lives-in → lives_in
+      .split(/\s+/)
+      .filter(w => !STOP_WORDS.has(w) && w.length > 0);
 
     // Try consecutive word pairs as subject+relation
     for (let i = 0; i < parts.length - 1; i++) {
@@ -196,7 +263,10 @@ export class HRRMemory {
 
   // ── Stats ──────────────────────────────────────────
 
-  /** Get memory statistics */
+  /**
+   * Get memory statistics: dimensions, bucket count, total facts, RAM usage.
+   * @returns {Stats}
+   */
   stats() {
     let totalFacts = 0;
     const bucketInfo = [];
@@ -221,7 +291,10 @@ export class HRRMemory {
 
   // ── Persistence ────────────────────────────────────
 
-  /** Serialize to JSON */
+  /**
+   * Serialize the entire memory store to a plain object.
+   * @returns {{ version: number, d: number, symbols: object, buckets: object, routing: object }}
+   */
   toJSON() {
     const buckets = {};
     for (const [k, v] of this.buckets) buckets[k] = v.toJSON();
@@ -230,7 +303,11 @@ export class HRRMemory {
     return { version: 3, d: this.d, symbols: this.symbols.toJSON(), buckets, routing };
   }
 
-  /** Deserialize from JSON */
+  /**
+   * Deserialize from a plain object (as produced by toJSON).
+   * @param {object} data - Serialized memory data
+   * @returns {HRRMemory}
+   */
   static fromJSON(data) {
     const d = data.d || 2048;
     const mem = new HRRMemory(d);
@@ -244,12 +321,20 @@ export class HRRMemory {
     return mem;
   }
 
-  /** Save to a JSON file */
+  /**
+   * Save the memory store to a JSON file.
+   * @param {string} filePath - Path to write the JSON file
+   */
   save(filePath) {
     writeFileSync(filePath, JSON.stringify(this.toJSON()));
   }
 
-  /** Load from a JSON file (returns new empty store if file doesn't exist) */
+  /**
+   * Load a memory store from a JSON file. Returns a new empty store if the file doesn't exist.
+   * @param {string} filePath - Path to the JSON file
+   * @param {number} [d=2048] - Vector dimensions (used only if creating new store)
+   * @returns {HRRMemory}
+   */
   static load(filePath, d = 2048) {
     if (!existsSync(filePath)) return new HRRMemory(d);
     try { return HRRMemory.fromJSON(JSON.parse(readFileSync(filePath, 'utf8'))); }

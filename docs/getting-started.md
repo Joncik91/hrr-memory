@@ -18,7 +18,7 @@ const mem = new HRRMemory();
 
 ### Storing Facts
 
-Facts are `(subject, relation, object)` triples. All values are lowercased and trimmed automatically.
+Facts are `(subject, relation, object)` triples. All values are lowercased and trimmed automatically. This means `store('Alice', 'Name', 'Alice')` stores the object as `'alice'`. If you need case-sensitive values, normalize them yourself before calling store().
 
 ```js
 mem.store('alice', 'lives_in', 'paris');

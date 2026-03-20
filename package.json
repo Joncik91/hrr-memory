@@ -1,17 +1,19 @@
 {
   "name": "hrr-memory",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Holographic Reduced Representations for structured agent memory. Zero dependencies. Complements RAG with algebraic fact queries.",
   "type": "module",
   "main": "src/index.js",
   "exports": {
     ".": "./src/index.js"
   },
+  "types": "types/index.d.ts",
   "files": [
-    "src/"
+    "src/",
+    "types/"
   ],
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/memory.test.js",
     "bench": "node bench/benchmark.js"
   },
   "keywords": [

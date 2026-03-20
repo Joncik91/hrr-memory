@@ -119,6 +119,16 @@ Not everything diverges from the literature:
 - **Cosine similarity for decoding** — nearest-neighbor lookup in symbol space
 - **Dual representation** — symbolic triples alongside algebraic vectors, matching the hybrid architecture recommended by OpenMem
 
+### What We Don't Do
+
+These are intentional boundaries, not missing features:
+
+- **No fuzzy matching.** `query('alice', 'city')` won't match a fact stored as `('alice', 'lives_in', 'paris')`. Relations are exact keys, not semantic queries. Use RAG for fuzzy recall.
+- **No inference.** Can't derive `alice works_in paris` from `alice works_at acme` + `acme located_in paris`. This is a retrieval layer, not a reasoning engine. Let the LLM do the inference.
+- **Atomic values.** Objects are single symbols. `"new york"` works as one symbol but can't be partially matched or decomposed. Design your triple vocabulary accordingly.
+- **Append-only vectors.** The memory vector accumulates associations via addition. `forget()` works by rebuilding the entire bucket vector from remaining triples — not by subtraction. This is correct but means frequent deletes on a full bucket have a cost.
+- **Symbol table grows monotonically.** Deleting a fact doesn't remove its symbol vectors. Symbols are only cleaned up if you rebuild the entire memory from scratch. In practice this rarely matters — symbols are 8KB each.
+
 ### References
 
 - Plate, T. (1994). *Distributed Representations and Nested Compositional Structure*. PhD thesis, University of Toronto.

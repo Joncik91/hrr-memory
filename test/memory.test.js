@@ -150,6 +150,104 @@ describe('ask (free-form)', () => {
   });
 });
 
+describe('ask() normalization', () => {
+
+  it('strips stop words and possessives', () => {
+    const mem = new HRRMemory();
+    mem.store('alice', 'timezone', 'cet');
+    mem.store('alice', 'lives_in', 'paris');
+
+    const r1 = mem.ask("What is alice's timezone?");
+    assert.strictEqual(r1.type, 'direct');
+    assert.strictEqual(r1.match, 'cet');
+
+    const r2 = mem.ask("Where does alice live?");
+    assert.notStrictEqual(r2.type, 'miss');
+  });
+
+  it('handles hyphenated relations', () => {
+    const mem = new HRRMemory();
+    mem.store('bob', 'works_at', 'acme');
+    const r = mem.ask('bob works-at');
+    assert.strictEqual(r.type, 'direct');
+    assert.strictEqual(r.match, 'acme');
+  });
+
+  it('all stop words removed still finds subject', () => {
+    const mem = new HRRMemory();
+    mem.store('reef', 'port', '18789');
+    const r = mem.ask('what is reef?');
+    assert.strictEqual(r.type, 'subject');
+    assert.ok(r.facts.length > 0);
+  });
+});
+
+describe('forget()', () => {
+
+  it('removes a fact and query reflects removal', () => {
+    const mem = new HRRMemory();
+    mem.store('alice', 'city', 'paris');
+    mem.store('alice', 'job', 'engineer');
+    assert.strictEqual(mem.forget('alice', 'city', 'paris'), true);
+    assert.strictEqual(mem.forget('alice', 'city', 'paris'), false);
+    assert.strictEqual(mem.querySubject('alice').length, 1);
+    assert.strictEqual(mem.query('alice', 'job').match, 'engineer');
+  });
+
+  it('works across sharded buckets', () => {
+    const mem = new HRRMemory();
+    for (let i = 0; i < 30; i++) mem.store('x', 'r' + i, 'v' + i);
+    assert.strictEqual(mem.forget('x', 'r0', 'v0'), true);
+    assert.strictEqual(mem.stats().totalFacts, 29);
+    assert.strictEqual(mem.query('x', 'r1').match, 'v1');
+    assert.strictEqual(mem.query('x', 'r29').match, 'v29');
+  });
+
+  it('cleans up empty overflow buckets', () => {
+    const mem = new HRRMemory();
+    for (let i = 0; i < 26; i++) mem.store('y', 'r' + i, 'v' + i);
+    // Bucket y has 25, y#1 has 1
+    assert.strictEqual(mem.stats().perBucket.filter(b => b.name.startsWith('y')).length, 2);
+    mem.forget('y', 'r25', 'v25');
+    // y#1 should be removed (empty overflow)
+    assert.strictEqual(mem.stats().perBucket.filter(b => b.name.startsWith('y')).length, 1);
+  });
+
+  it('returns false for nonexistent subject', () => {
+    const mem = new HRRMemory();
+    assert.strictEqual(mem.forget('nobody', 'x', 'y'), false);
+  });
+});
+
+describe('edge cases', () => {
+
+  it('handles unicode subjects and objects', () => {
+    const mem = new HRRMemory();
+    mem.store('münchen', 'country', 'deutschland');
+    assert.strictEqual(mem.query('münchen', 'country').match, 'deutschland');
+  });
+
+  it('maintains accuracy across 200+ facts on one subject', () => {
+    const mem = new HRRMemory();
+    for (let i = 0; i < 200; i++) {
+      mem.store('heavy', 'attr_' + i, 'val_' + i);
+    }
+    let correct = 0;
+    for (let i = 0; i < 200; i++) {
+      if (mem.query('heavy', 'attr_' + i).match === 'val_' + i) correct++;
+    }
+    assert.strictEqual(correct, 200);
+  });
+
+  it('store lowercases all values', () => {
+    const mem = new HRRMemory();
+    mem.store('Alice', 'City', 'PARIS');
+    assert.strictEqual(mem.query('alice', 'city').match, 'paris');
+    const facts = mem.querySubject('alice');
+    assert.strictEqual(facts[0].object, 'paris');
+  });
+});
+
 describe('persistence', () => {
 
   it('save and load preserves facts', () => {

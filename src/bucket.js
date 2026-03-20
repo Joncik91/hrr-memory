@@ -3,6 +3,8 @@
  * Auto-splits are managed by HRRMemory, not by the bucket itself.
  */
 
+import { bind } from './ops.js';
+
 export const MAX_BUCKET_SIZE = 25;
 
 export class Bucket {
@@ -23,6 +25,22 @@ export class Bucket {
 
   /** Whether the bucket has reached max capacity */
   get isFull() { return this.count >= MAX_BUCKET_SIZE; }
+
+  /**
+   * Rebuild the memory vector from remaining triples.
+   * Called after removing a triple — can't subtract cleanly due to superposition noise.
+   */
+  rebuild(symbols) {
+    this.memory = new Float32Array(this.d);
+    for (const t of this.triples) {
+      const s = symbols.get(t.subject);
+      const r = symbols.get(t.relation);
+      const o = symbols.get(t.object);
+      const association = bind(bind(s, r), o);
+      for (let i = 0; i < this.d; i++) this.memory[i] += association[i];
+    }
+    this.count = this.triples.length;
+  }
 
   /** Serialize */
   toJSON() {
